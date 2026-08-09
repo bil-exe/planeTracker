@@ -103,3 +103,14 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ## Initialisation de l'app 
 1- pour créer le projet : npx @nestjs/cli@latest // Donc pour accéder aux options/ aides : npx nest -v ...
+Nest à été installé en local donc pour toutes commandes il faut utiliser npx. Ex: npx npm run...
+
+
+
+## 1- Backend api simple 
+
+## 2- Connexion user + Db Prisma 
+
+## 3- Frontend affichage de données 
+
+## 4- Favoris, photos de profil etc.
