@@ -1,4 +1,4 @@
-import { Controller, Get, Injectable } from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
 import { FlightServices } from "./flights.service";
 
 @Controller()
@@ -14,4 +14,9 @@ export class FlightsController {
         return this.flightServices.getCurrentFlights();
     }
 
+    @Get('planes/current/:hour')
+    getCurrentFlightFromNow(@Param('hour') hour): any{
+    console.log('parameter hour: ', hour);
+    return this.flightServices.getCurrentFlightFromNow(hour);
+  };
 }
