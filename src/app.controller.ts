@@ -10,9 +10,9 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get("/planes")
-    findPlane():any {
-      return this.appService.findPlane();
-    }
+  // @Get("/planes")
+  //   findPlane():any {
+  //     return this.appService.findPlane();
+  //   }
   
 }

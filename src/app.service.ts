@@ -7,12 +7,14 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
-  constructor(private readonly httpService: HttpService) { }
-  async findPlane(): Promise<Observable<AxiosResponse>>{
-    const response:any = await firstValueFrom(
-      this.httpService.get("https://opensky-network.org/api/states/all")
-    ) 
-    return response.data;
-  }
+
+  // constructor(private readonly httpService: HttpService) {}
+  // async findPlane(): Promise<Observable<AxiosResponse>>{
+  //   const response:any = await firstValueFrom(
+  //     this.httpService.get("https://opensky-network.org/api/states/all")
+  //   )
+  //   // console.log('findPlane :',response.data);
+  //   return response.data;
+  // }
 
 }
