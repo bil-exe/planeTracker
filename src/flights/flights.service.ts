@@ -12,9 +12,6 @@ export class FlightServices {
             this.httpService.get('https://opensky-network.org/api/states/all'),
         );
         // console.log('status of planes: ', response);
-        
-        console.log('client id', process.env.OPENSKY_CLIENT_ID)
-        console.log('client Secret', process.env.OPENSKY_CLIENT_SECRET);
         return response.data;
     }
     // recupère les données des appareils en vol sur une plage horaire d'une heure

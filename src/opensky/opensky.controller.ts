@@ -5,7 +5,7 @@ import { OpenSkyService, type Token } from './opensky.service';
 export class OpenSkyController {
   constructor(private readonly validToken: OpenSkyService) {}
   @Get('token')
-  NewToken(): Promise<Token> {
+  NewToken(): Promise<string> {
     return this.validToken.getToken();
   }
 }
