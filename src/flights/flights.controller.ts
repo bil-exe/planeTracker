@@ -19,4 +19,9 @@ export class FlightsController {
     console.log('parameter hour: ', hour);
     return this.flightServices.getSeenFlightFromNow(hour);
   }
+  // TEST
+  @Get('planes/testToken')
+  getBirthdayflights(): any {
+    return this.flightServices.getHistoricalFlights();
+  }
 }

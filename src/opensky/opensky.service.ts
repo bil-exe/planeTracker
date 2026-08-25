@@ -9,12 +9,13 @@ export interface Token {
     access_token: string;
     refresh_expires_in: number;
     expires_in: number;
+    expiresAt: number;
     token_type: string;
     scope: string;
 }
 
 @Injectable()
-
+//Modification a faire le if n'as pas l'air de fonctionner 
 export class OpenSkyService {
     constructor(readonly httpService: HttpService, private readonly configService: ConfigService) { }
     private token: Token | undefined = undefined;
@@ -29,7 +30,7 @@ export class OpenSkyService {
         try {
 
             // si token existe et valide + 30 sec 
-            if (this.token && this.token.expires_in - Date.now() > 30 * 1000) {
+            if (this.token && this.token.expiresAt - Date.now() > 30 * 1000) {
                 console.log('Token encore valide');
                 return this.token.access_token
             }
@@ -50,13 +51,15 @@ export class OpenSkyService {
                     },
                 ),
             );
-
+            
             this.token = {
                 access_token: response.data.access_token,
                 refresh_expires_in: response.data.refresh_expires_in,
                 expires_in: response.data.expires_in,
                 token_type: response.data.token_type,
-                scope: response.data.scope
+                scope: response.data.scope,
+                // * 1000 pour transformer en secondes 
+                expiresAt: Date.now() + response.data.expires_in * 1000
             }
             console.log('token : ', this.token);
             console.log('expire in : ', this.token.expires_in);
