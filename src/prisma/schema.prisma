@@ -1,0 +1,51 @@
+generator client {
+    provider = "prisma-client-js" //Genere js/ts client 
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id       String @id @default(uuid()) // Primary key et auto incrémentation 
+    name     String
+    email    String @unique
+    password String
+    role     Role   @default(USER)
+
+    // relations 
+    favICAO     ICAO[]
+    favAirports Airport[]
+
+    //Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("users") // nom de la table 
+}
+
+model ICAO {
+    id            String @id @default(uuid())
+    aircraft_icao String
+    owner         User   @relation(fields: [owner_id], references: [id])
+    owner_id      String // contient l'id de l'user pour faire le lien entre owner et la table user 
+
+    @@map("icao")
+}
+
+model Airport {
+    id           String @id @default(uuid())
+    airport_icao String
+    owner        User   @relation(fields: [owner_id], references: [id])
+    owner_id     String
+
+    @@map("airports")
+}
+
+// Pour les roles des users 
+enum Role {
+    USER
+    ADMIN
+    MODERATOR
+}

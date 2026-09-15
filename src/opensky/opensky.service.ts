@@ -19,7 +19,7 @@ export interface Token {
 export class OpenSkyService {
     constructor(readonly httpService: HttpService, private readonly configService: ConfigService) { }
     private token: Token | undefined = undefined;
-    private  test :any = 29 * 1000
+    private test: any = 29 * 1000
     // private tokenExpires: number = 0;
 
     async getToken(): Promise<string> {
@@ -34,6 +34,7 @@ export class OpenSkyService {
                 console.log('Token encore valide');
                 return this.token.access_token
             }
+
 
             // Sinon ça veut dire soit Token bientot expiré soit pas de token  donc on en créé un 
             const response: AxiosResponse = await firstValueFrom(
@@ -51,18 +52,19 @@ export class OpenSkyService {
                     },
                 ),
             );
-            
+
             this.token = {
                 access_token: response.data.access_token,
                 refresh_expires_in: response.data.refresh_expires_in,
                 expires_in: response.data.expires_in,
                 token_type: response.data.token_type,
                 scope: response.data.scope,
-                // * 1000 pour transformer en secondes 
+                // * 1000 pour transformer en millisecondes pour pouvoir comparer a Date.now
                 expiresAt: Date.now() + response.data.expires_in * 1000
             }
             console.log('token : ', this.token);
             console.log('expire in : ', this.token.expires_in);
+            console.log('expire At : ', new Date(this.token.expiresAt));
             console.log('un nouveau token à été créé')
 
             return this.token.access_token;

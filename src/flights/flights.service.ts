@@ -6,7 +6,7 @@ import { OpenSkyService } from '../opensky/opensky.service';
 
 @Injectable()
 export class FlightServices {
-    constructor(private readonly httpService: HttpService, private readonly openskyService: OpenSkyService) { }
+    constructor(private readonly httpService: HttpService,private readonly openskyService: OpenSkyService) { }
     //récupère les données de tous les appareils en actuellement en vol
     async getStatus(): Promise<any> {
         const response: any = await firstValueFrom(
@@ -39,9 +39,6 @@ export class FlightServices {
         //hour =. nbre heure dans le @Params et ensuite 60 * 60 pour transformer en secondes
         const begin: number = now - hour * 60 * 60;
         console.log('begin in unix and hour :', begin, hour);
-        const token = await this.openskyService.getToken();
-
-        console.log('token from in flight service getSeenFlight:', token);
         const response: any = await firstValueFrom(
             this.httpService.get(
                 `https://opensky-network.org/api/flights/all?begin=${begin}&end=${now}`,
@@ -52,8 +49,8 @@ export class FlightServices {
     }
     // TEST 
     async getHistoricalFlights() {
-        const begin = 1080529200 ;
-        const end = 1080532800;
+        const begin = 1517227200;
+        const end = 1517230800;
         //await pour eviter le probleme promise pending 
         const token = await this.openskyService.getToken();
         console.log('token in getHistoricalFlights:', token);
@@ -62,8 +59,7 @@ export class FlightServices {
                 `https://opensky-network.org/api/flights/all?begin=${begin}&end=${end}`,
                 {
                     headers: {
-                        Authorization: 
-                        `Bearer ${token}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             )
@@ -71,3 +67,4 @@ export class FlightServices {
         return response.data;
     }
 }
+ 

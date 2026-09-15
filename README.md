@@ -110,7 +110,8 @@ Nest à été installé en local donc pour toutes commandes il faut utiliser npx
 ## 1- Backend api simple 
 
 ## 2- Connexion user + Db Prisma 
-
+1- La base de données à été initialisé dans un container Docker via docker-compose, pour démarrer le container donc la base de donnée : docker-compose up (démarrer l'app Docker au préalable)
+2- Pour voir si tout fonctionne correctement : docker-compose ps 
 ## 3- Frontend affichage de données 
 
 ## 4- Favoris, photos de profil etc.

@@ -1,0 +1,18 @@
+version: '3.8' # version de docker 
+
+services: # les containers à run 
+  postgres:
+    image: postgres:15-alpine
+    environment: # parametre de la Db 
+      POSTGRES_USER: nabil # Db username 
+      POSTGRES_PASSWORD: Siembou_05 # mdp à changer en prod 
+      POSTGRES_DB: planeTracker # nom de la Db 
+    ports:
+      - 5432:5432 # port par défaut postgres 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # déclaration du volume 
+
+volumes:
+  postgres_data:
+
+
