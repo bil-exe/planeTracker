@@ -1,8 +1,10 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt'
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
 
 @Injectable()
 export class UsersService {
@@ -89,25 +91,99 @@ export class UsersService {
           password: false,
           createdAt: true,
           updatedAt: true,
-          role: true
+          role: true,
+
+          // iclude personnal fav of the user 
+          favICAO: {
+            select: {
+              id: true,
+              aircraft_icao: true,
+              owner: true,
+              owner_id: true
+            }
+          }
         }
       });
 
       return user;
 
     } catch (err: any) {
-      
+
       throw new Error('Can\t display the user, maybe check if the good id is provided', err)
     }
 
     // return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      // check if the user exist 
+      const checkUser = await this.findOne(id);
+      if (!checkUser) { throw new HttpException('User Not found or invalid, Error in method update user', HttpStatus.NOT_FOUND) };
+
+      // if updating the password we have to hash it again 
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
+
+      // add the update in the database 
+      const user = await this.prisma.user.update({
+        where: {
+          id: id
+        },
+        data: updateUserDto,   // only the fields that we want to update 
+
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          password: false,
+          createdAt: true,
+          updatedAt: true,
+          role: true,
+        }
+      });
+
+    } catch (err: any) {
+      throw new HttpException(`Can\'t update the user, check the update user method. err message : ${err}`,HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+    // return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    try {
+      const userId: string = id;
+      const deletedUser = await this.prisma.user.delete({
+        where: {
+          id: userId
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          password: false,
+          createdAt: true,
+          updatedAt: true,
+          role: true,
+          // iclude personnal fav of the user 
+          favICAO: {
+            select: {
+              id: true,
+              aircraft_icao: true,
+              owner: true,
+              owner_id: true
+            }
+          }
+        }
+
+      });
+      return deletedUser;
+
+    } catch (err: any) {
+      throw new Error('Can\t delete the user, check if the id provided is good or if the database is running. Error : ', err);
+    }
+
+
+    // return `This action removes a #${id} user`;
   }
 }
