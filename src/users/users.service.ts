@@ -72,8 +72,35 @@ export class UsersService {
     // return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    try {
+      const userId: string = id;
+      console.log('userId : ', userId);
+
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: userId
+        },
+
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          password: false,
+          createdAt: true,
+          updatedAt: true,
+          role: true
+        }
+      });
+
+      return user;
+
+    } catch (err: any) {
+      
+      throw new Error('Can\t display the user, maybe check if the good id is provided', err)
+    }
+
+    // return `This action returns a #${id} user`;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

@@ -110,8 +110,31 @@ Nest à été installé en local donc pour toutes commandes il faut utiliser npx
 ## 1- Backend api simple 
 
 ## 2- Connexion user + Db Prisma 
-1- La base de données à été initialisé dans un container Docker via docker-compose, pour démarrer le container donc la base de donnée : docker-compose up (démarrer l'app Docker au préalable)
-2- Pour voir si tout fonctionne correctement : docker-compose ps 
+- Le projet utilise PostgreSQL comme système de gestion de base de données. PostgreSQL est exécuté dans un conteneur Docker afin de faciliter la configuration et d'avoir un environnement de développement reproductible.
+Prisma est utilisé comme ORM pour communiquer avec PostgreSQL, définir les modèles de données et gérer les migrations.
+
+  ## a- Lancer PostgreSQL avec Docker
+      1- Le projet contient un fichier docker-compose.yml permettant de créer et démarrer le conteneur PostgreSQL : docker-compose up -d(démarrer l'app Docker au préalable)
+      2- Pour voir si tout fonctionne correctement : docker-compose ps
+  ## b- Configurer la connexion à PostgreSQL
+      - La connexion à la base de données est définie dans le fichier .env. Lorsque Prisma est exécuté directement depuis la machine hôte, localhost permet d'accéder au port 5432 exposé par le conteneur PostgreSQL. Si Prisma ou l'application est exécuté depuis un autre conteneur Docker, le hostname postgres peut être utilisé à la place de localhost.
+
+  ## c- Configuration de Prisma
+      - Le fichier schema.prisma contient le générateur Prisma, la connexion à la base de donnée ainsi que les modèles de cette base de donnée.
+      1- Pour vérifier que ce fichier est valide : npx prisma validate 
+      2- Pour synchroniser directement les modèles Prisma avec la base de données : npx prisma db push (à utiliser à chaque modification de modèle)
+  
+  ## d- Utiliser les migrations
+      - Après chaque modification de modèle on créé une migration pour enregistrer les changements :npx prisma migrate dev --name add-user
+      - Les migrations sont stockées dans : prisma/migrations/ 
+      Elles permettent de conserver l'historique des modifications apportées à la structure de la base de données.
+
+  ## e- Prisma studio
+      - C'est l'interface physique de la base de donnée pour faciliter sa gestion pour y accéder : npx prisma studio
+
+
+
+
 ## 3- Frontend affichage de données 
 
 ## 4- Favoris, photos de profil etc.
