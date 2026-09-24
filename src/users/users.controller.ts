@@ -19,11 +19,14 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    // @Param('id') extracts :id from URL
+    // Example: GET /users/abc-123 → id = 'abc-123'
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('edit/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+        // Both URL parameter and request body
     return this.usersService.update(id, updateUserDto);
   }
 

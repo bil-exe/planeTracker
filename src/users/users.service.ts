@@ -1,4 +1,4 @@
-import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -153,6 +153,8 @@ export class UsersService {
   async remove(id: string) {
     try {
       const userId: string = id;
+      // check if the user exist 
+      await this.findOne(userId);
       const deletedUser = await this.prisma.user.delete({
         where: {
           id: userId
@@ -177,6 +179,8 @@ export class UsersService {
         }
 
       });
+
+      console.log(`user ${userId} has successfuly deleted !`);
       return deletedUser;
 
     } catch (err: any) {
@@ -186,4 +190,21 @@ export class UsersService {
 
     // return `This action removes a #${id} user`;
   }
+
+  // login 
+   async login(mailInput: string, password:string) {
+    // check if the mail provided corespond to an actual user 
+    const user = await this.prisma.user.findUnique({where: {email: mailInput }});
+    if (!user) {
+      console.log('User Not found ')
+      throw new HttpException('User Not found in the database', HttpStatus.NOT_FOUND);
+    }
+
+    // check if the password match with the hash in the db 
+    const passwordCheck: boolean = await bcrypt.compare(password,user.password);
+    if (passwordCheck) {
+      
+    }
+    // return a token to the user 
+   }
 }
