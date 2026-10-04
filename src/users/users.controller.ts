@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
+// @UseGuards(JwtStrategy) // Use guard for all users routes 
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post('new')
   create(@Body() createUserDto: CreateUserDto) {
@@ -26,12 +29,21 @@ export class UsersController {
 
   @Patch('edit/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-        // Both URL parameter and request body
+    // Both URL parameter and request body
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete('delete/:id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+  // Get current Profile users/me
+  @Get('me')
+  @UseGuards(JwtAuthGuard) // need to be logged in for that request 
+  @HttpCode(HttpStatus.OK) // 200
+  getProfile(@CurrentUser() user: any) {
+    // @CurrentUser() give automatically the current user 
+    // No need to decode token manually!
+    return user;
   }
 }

@@ -7,13 +7,15 @@ import { ConfigModule } from '@nestjs/config';
 import { AirportsModule } from './airports/airports.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 // isGlobal permet a configModule d'etre utilise dans tous les modules sans l'importer a chaque fois 
 @Module({
   imports: [FlightModule, OpenskyModule,AirportsModule,PrismaModule,
     ConfigModule.forRoot({
     isGlobal:true,
   }),
-    UsersModule],
+    UsersModule,
+    AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

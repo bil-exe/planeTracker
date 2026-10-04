@@ -3,8 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt'
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+
 
 @Injectable()
 export class UsersService {
@@ -115,6 +114,18 @@ export class UsersService {
     // return `This action returns a #${id} user`;
   }
 
+  // Method for authetication
+  async findByEmail(email:string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    console.log('user from findByEmail : ', user)
+    return user;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       // check if the user exist 
@@ -191,20 +202,5 @@ export class UsersService {
     // return `This action removes a #${id} user`;
   }
 
-  // login 
-   async login(mailInput: string, password:string) {
-    // check if the mail provided corespond to an actual user 
-    const user = await this.prisma.user.findUnique({where: {email: mailInput }});
-    if (!user) {
-      console.log('User Not found ')
-      throw new HttpException('User Not found in the database', HttpStatus.NOT_FOUND);
-    }
 
-    // check if the password match with the hash in the db 
-    const passwordCheck: boolean = await bcrypt.compare(password,user.password);
-    if (passwordCheck) {
-      
-    }
-    // return a token to the user 
-   }
 }
