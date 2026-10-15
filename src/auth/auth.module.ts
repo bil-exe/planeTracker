@@ -7,21 +7,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 
-console.log('JWT SECRET dans AuthModule:', process.env.JWT_SECRET);
 @Module({
 
   imports: [
     UsersModule, // to use UserService
     PassportModule, // enable passport
-    // JwtModule.registerAsync({ // config jwt 
-    //   secret: process.env.JWT_SECRET,
-
-    //   // In production, I have to use a long random string
-    //   // Generate with: openssl rand -base64 32
-    //   signOptions: {
-    //     expiresIn: '1h'
-    //   }
-    // })
+    
     JwtModule.registerAsync({ // configuration jwt 
       inject: [ConfigService], // importer ConfigService
       global: true,

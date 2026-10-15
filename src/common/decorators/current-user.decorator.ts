@@ -5,7 +5,7 @@ export const CurrentUser = createParamDecorator(
     (data: unknown, ctx: ExecutionContext) => {
         // Get HTTP request from context
         const request = ctx.switchToHttp().getRequest();
-
+        console.log('data in currentUser : ', data);
         //return user, attached by jwt strategy  
         return request.user;
     }

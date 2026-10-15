@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';  // For creating tokens
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt'
-import { errorContext } from 'rxjs/internal/util/errorContext';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 
 
@@ -83,8 +82,6 @@ export class AuthService {
             sub: userId, // sub is id for jwt
             email: userEmail
         }
-        console.log('payload generate token : ', payload);
-        console.log('secret generate token : ', process.env.JWT_SECRET);
         
         //sign and return the token
         return this.jwtService.sign(payload);
