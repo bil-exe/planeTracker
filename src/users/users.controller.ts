@@ -20,6 +20,18 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  // méthode à placer avant Get :id pour éviter un problème de correpondance entre les deux routes 
+  // Get current Profile users/me
+  @Get('me')
+  @UseGuards(JwtAuthGuard) // need to be logged in for that request 
+  @HttpCode(HttpStatus.OK) // 200
+  getProfile(@CurrentUser() user: any) {
+    console.log('user in controller me :', user)
+    // @CurrentUser() give automatically the current user 
+    // No need to decode token manually!@
+    return user;
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     // @Param('id') extracts :id from URL
@@ -37,13 +49,6 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
-  // Get current Profile users/me
-  @Get('me')
-  @UseGuards(JwtAuthGuard) // need to be logged in for that request 
-  @HttpCode(HttpStatus.OK) // 200
-  getProfile(@CurrentUser() user: any) {
-    // @CurrentUser() give automatically the current user 
-    // No need to decode token manually!
-    return user;
-  }
+
+
 }
